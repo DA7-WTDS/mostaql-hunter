@@ -164,7 +164,7 @@ Bids: {project.bids_count}
 Description: {(project.full_description or project.snippet)[:1500]}
 """
     resp = await gemini_client.aio.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.8-flash",
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
