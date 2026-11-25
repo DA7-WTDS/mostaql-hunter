@@ -5,8 +5,8 @@ import random
 import re
 from dataclasses import dataclass
 from pathlib import Path
-import httpx
 from bs4 import BeautifulSoup
+from curl_cffi.requests import AsyncSession
 
 MOSTAQL_URL = "https://mostaql.com/projects/development?sort=latest"
 SEEN_FILE = Path("seen.json")
@@ -78,14 +78,9 @@ NEGATIVE_KEYWORDS = {
     "ايفون": -25,
 }
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-    "Accept-Language": "ar,en-US;q=0.9,en;q=0.8",
-}
-
 TASHKEEL_RE = re.compile(r"[\u0617-\u061A\u064B-\u0652]")
 BUDGET_RE = re.compile(r"\$\s*(\d+(?:,\d+)*(?:\.\d+)?)")
-BIDS_RE = re.compile(r"(\d+)\s*عروض?")
+BIDS_RE = re.compile(r"(\d+)\s*(?:عرض|عروض)")
 
 
 @dataclass
@@ -148,10 +143,12 @@ def score_text(text: str, bids_count: int) -> int:
     return score
 
 
-async def fetch_project_list(client: httpx.AsyncClient) -> list[Project]:
-    resp = await client.get(MOSTAQL_URL, headers=HEADERS, timeout=20.0)
+async def fetch_project_list(client: AsyncSession) -> list[Project]:
+    resp = await client.get(MOSTAQL_URL, timeout=20.0)
+    print(f"HTTP Status: {resp.status_code} | HTML Length: {len(resp.text)}")
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
+    print(f"Page Title: {soup.title.get_text(strip=True) if soup.title else 'No Title'}")
 
     projects: list[Project] = []
     for row in soup.select("tr.project-row"):
@@ -176,12 +173,13 @@ async def fetch_project_list(client: httpx.AsyncClient) -> list[Project]:
         )
         projects.append(project)
 
+    print(f"Projects found: {len(projects)}")
     return projects
 
 
-async def enrich_project_details(client: httpx.AsyncClient, project: Project) -> None:
+async def enrich_project_details(client: AsyncSession, project: Project) -> None:
     await asyncio.sleep(random.uniform(1.0, 2.5))
-    resp = await client.get(project.url, headers=HEADERS, timeout=20.0)
+    resp = await client.get(project.url, timeout=20.0)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -202,7 +200,7 @@ async def enrich_project_details(client: httpx.AsyncClient, project: Project) ->
     project.score = score_text(f"{project.title} {project.full_description}", project.bids_count)
 
 
-async def send_alert(client: httpx.AsyncClient, project: Project) -> None:
+async def send_alert(client: AsyncSession, project: Project) -> None:
     summary = (project.full_description or project.snippet)[:220]
     message = (
         f"التقييم: {project.score} | الميزانية: {project.budget_text} | العروض: {project.bids_count}\n"
@@ -224,7 +222,7 @@ async def main() -> None:
     seen_set = set(seen_list)
     updated = False
 
-    async with httpx.AsyncClient(follow_redirects=True) as client:
+    async with AsyncSession(impersonate="chrome") as client:
         projects = await fetch_project_list(client)
         for project in projects:
             if project.url in seen_set:
