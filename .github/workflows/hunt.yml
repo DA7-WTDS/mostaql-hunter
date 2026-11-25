@@ -2,11 +2,15 @@ name: Mostaql Job Hunter
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "3,13,23,33,43,53 * * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: mostaql-hunter
+  cancel-in-progress: false
 
 jobs:
   scan:
@@ -34,6 +38,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add seen.json
           if ! git diff --cached --quiet; then
-            git commit -m "Update seen jobs [skip ci]"
+            git commit -m "Update seen jobs"
+            git pull --rebase
             git push
           fi
