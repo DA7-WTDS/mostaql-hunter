@@ -104,15 +104,27 @@ def normalize_arabic(text: str) -> str:
     return text
 
 
-def load_seen() -> list[str]:
+def load_seen() -> list[dict | str]:
     if not SEEN_FILE.exists():
         return []
     return json.loads(SEEN_FILE.read_text(encoding="utf-8"))
 
 
-def save_seen(urls: list[str]) -> None:
-    trimmed = urls[-MAX_SEEN_HISTORY:]
+def save_seen(entries: list[dict | str]) -> None:
+    trimmed = entries[-MAX_SEEN_HISTORY:]
     SEEN_FILE.write_text(json.dumps(trimmed, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def build_seen_entry(project: Project, status: str, reason: str) -> dict:
+    return {
+        "url": project.url,
+        "title": project.title,
+        "status": status,
+        "reason": reason,
+        "score": project.score,
+        "bids": project.bids_count,
+        "budget": project.budget_text,
+    }
 
 
 def parse_bids_count(meta_text: str) -> int:
@@ -221,7 +233,7 @@ async def send_alert(page: Page, project: Project) -> None:
 
 async def main() -> None:
     seen_list = load_seen()
-    seen_set = set(seen_list)
+    seen_set = {item["url"] if isinstance(item, dict) else item for item in seen_list}
     updated = False
 
     async with async_playwright() as p:
@@ -238,24 +250,34 @@ async def main() -> None:
                 continue
 
             seen_set.add(project.url)
-            seen_list.append(project.url)
             updated = True
 
-            if project.bids_count > MAX_BIDS or project.score < 0:
+            if project.bids_count > MAX_BIDS:
+                seen_list.append(build_seen_entry(project, "rejected", f"too_many_bids ({project.bids_count} > {MAX_BIDS})"))
+                continue
+
+            if project.score < 0:
+                seen_list.append(build_seen_entry(project, "rejected", f"blocked_keywords (score {project.score})"))
                 continue
 
             try:
                 await enrich_project_details(page, project)
             except Exception as exc:
                 print(f"Detail fetch failed for {project.url}: {exc}")
+                seen_list.append(build_seen_entry(project, "rejected", "detail_fetch_failed"))
                 continue
 
             if project.min_budget is not None and project.min_budget < MIN_BUDGET:
+                seen_list.append(build_seen_entry(project, "rejected", f"budget_too_low (${project.min_budget} < ${MIN_BUDGET})"))
                 continue
 
-            if project.score >= MIN_SCORE_THRESHOLD:
-                await send_alert(page, project)
-                await asyncio.sleep(1.5)
+            if project.score < MIN_SCORE_THRESHOLD:
+                seen_list.append(build_seen_entry(project, "rejected", f"score_too_low ({project.score} < {MIN_SCORE_THRESHOLD})"))
+                continue
+
+            await send_alert(page, project)
+            seen_list.append(build_seen_entry(project, "sent", "matched"))
+            await asyncio.sleep(1.5)
 
         await browser.close()
 
