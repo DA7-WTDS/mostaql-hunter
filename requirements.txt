@@ -1,2 +1,2 @@
-curl-cffi
+playwright
 beautifulsoup4

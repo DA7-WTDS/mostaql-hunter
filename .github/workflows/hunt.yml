@@ -20,6 +20,8 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      - run: playwright install chromium --with-deps
+
       - name: Run Mostaql Hunter
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}

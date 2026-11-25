@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from bs4 import BeautifulSoup
-from curl_cffi.requests import AsyncSession
+from playwright.async_api import Page, async_playwright
 
 MOSTAQL_URL = "https://mostaql.com/projects/development?sort=latest"
 SEEN_FILE = Path("seen.json")
@@ -143,11 +143,11 @@ def score_text(text: str, bids_count: int) -> int:
     return score
 
 
-async def fetch_project_list(client: AsyncSession) -> list[Project]:
-    resp = await client.get(MOSTAQL_URL, timeout=20.0)
-    print(f"HTTP Status: {resp.status_code} | HTML Length: {len(resp.text)}")
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
+async def fetch_project_list(page: Page) -> list[Project]:
+    await page.goto(MOSTAQL_URL, wait_until="domcontentloaded", timeout=30000)
+    await page.wait_for_selector("tr.project-row", timeout=25000)
+    html = await page.content()
+    soup = BeautifulSoup(html, "html.parser")
     print(f"Page Title: {soup.title.get_text(strip=True) if soup.title else 'No Title'}")
 
     projects: list[Project] = []
@@ -177,11 +177,12 @@ async def fetch_project_list(client: AsyncSession) -> list[Project]:
     return projects
 
 
-async def enrich_project_details(client: AsyncSession, project: Project) -> None:
+async def enrich_project_details(page: Page, project: Project) -> None:
     await asyncio.sleep(random.uniform(1.0, 2.5))
-    resp = await client.get(project.url, timeout=20.0)
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
+    await page.goto(project.url, wait_until="domcontentloaded", timeout=30000)
+    await page.wait_for_selector("#project-brief-panel, .project-details, .text-wrapper-div", timeout=15000)
+    html = await page.content()
+    soup = BeautifulSoup(html, "html.parser")
 
     desc_el = soup.select_one("#project-brief-panel, .project-details, .text-wrapper-div")
     project.full_description = desc_el.get_text(" ", strip=True) if desc_el else project.snippet
@@ -200,7 +201,7 @@ async def enrich_project_details(client: AsyncSession, project: Project) -> None
     project.score = score_text(f"{project.title} {project.full_description}", project.bids_count)
 
 
-async def send_alert(client: AsyncSession, project: Project) -> None:
+async def send_alert(page: Page, project: Project) -> None:
     summary = (project.full_description or project.snippet)[:220]
     message = (
         f"التقييم: {project.score} | الميزانية: {project.budget_text} | العروض: {project.bids_count}\n"
@@ -213,8 +214,9 @@ async def send_alert(client: AsyncSession, project: Project) -> None:
         "priority": 4,
         "click": project.url,
     }
-    resp = await client.post("https://ntfy.sh/", json=payload, timeout=20.0)
-    resp.raise_for_status()
+    resp = await page.request.post("https://ntfy.sh/", data=payload, timeout=20000)
+    if not resp.ok:
+        raise RuntimeError(f"ntfy error {resp.status}: {await resp.text()}")
 
 
 async def main() -> None:
@@ -222,8 +224,15 @@ async def main() -> None:
     seen_set = set(seen_list)
     updated = False
 
-    async with AsyncSession(impersonate="chrome") as client:
-        projects = await fetch_project_list(client)
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            extra_http_headers={"Accept-Language": "ar,en-US;q=0.9,en;q=0.8"},
+        )
+        page = await context.new_page()
+
+        projects = await fetch_project_list(page)
         for project in projects:
             if project.url in seen_set:
                 continue
@@ -236,7 +245,7 @@ async def main() -> None:
                 continue
 
             try:
-                await enrich_project_details(client, project)
+                await enrich_project_details(page, project)
             except Exception as exc:
                 print(f"Detail fetch failed for {project.url}: {exc}")
                 continue
@@ -245,8 +254,10 @@ async def main() -> None:
                 continue
 
             if project.score >= MIN_SCORE_THRESHOLD:
-                await send_alert(client, project)
+                await send_alert(page, project)
                 await asyncio.sleep(1.5)
+
+        await browser.close()
 
     if updated:
         save_seen(seen_list)
