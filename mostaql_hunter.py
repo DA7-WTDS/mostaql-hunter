@@ -6,81 +6,24 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from bs4 import BeautifulSoup
+from google import genai
+from google.genai import types
 from playwright.async_api import Page, async_playwright
 
 MOSTAQL_URL = "https://mostaql.com/projects/development?sort=latest"
 SEEN_FILE = Path("seen.json")
 NTFY_TOPIC = os.environ["NTFY_TOPIC"]
+GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]
 MIN_BUDGET = 50
 MAX_BIDS = 10
-MIN_SCORE_THRESHOLD = 35
+MIN_LLM_SCORE = 70
 MAX_SEEN_HISTORY = 500
 
-POSITIVE_KEYWORDS = {
-    ".net": 35,
-    "asp.net": 35,
-    "c#": 35,
-    "دوت نت": 35,
-    "سي شارب": 35,
-    "django": 30,
-    "جانجو": 30,
-    "python": 25,
-    "بايثون": 25,
-    "fastapi": 25,
-    "backend": 25,
-    "باك اند": 25,
-    "api": 20,
-    "واجهه برمجيه": 20,
-    "واجهات برمجيه": 20,
-    "لوحه تحكم": 15,
-    "قاعده بيانات": 20,
-    "قواعد بيانات": 20,
-    "postgresql": 20,
-    "sql server": 20,
-    "redis": 20,
-    "docker": 15,
-    "node": 20,
-    "mern": 20,
-    "scraping": 20,
-    "استخراج بيانات": 20,
-    "سحب بيانات": 20,
-    "اتمته": 20,
-    "بوت": 15,
-    "automation": 20,
-    "playwright": 20,
-    "selenium": 20,
-    "yolo": 20,
-    "opencv": 20,
-    "openai": 20,
-    "llm": 20,
-    "ذكاء اصطناعي": 15,
-}
-
-NEGATIVE_KEYWORDS = {
-    "wordpress": -40,
-    "ووردبريس": -40,
-    "وردبريس": -40,
-    "elementor": -40,
-    "اليمنتور": -40,
-    "woocommerce": -35,
-    "ووكومرس": -35,
-    "سله": -30,
-    "shopify": -35,
-    "شوبيفاي": -35,
-    "flutter": -30,
-    "فلاتر": -30,
-    "laravel": -25,
-    "لارافيل": -25,
-    "php": -25,
-    "android": -25,
-    "اندرويد": -25,
-    "ios": -25,
-    "ايفون": -25,
-}
-
 TASHKEEL_RE = re.compile(r"[\u0617-\u061A\u064B-\u0652]")
-BUDGET_RE = re.compile(r"\$\s*(\d+(?:,\d+)*(?:\.\d+)?)")
+BUDGET_RE = re.compile(r"(?:\$\s*(\d+(?:,\d+)*(?:\.\d+)?)|(\d+(?:,\d+)*(?:\.\d+)?)\s*(?:\$|دولار))")
 BIDS_RE = re.compile(r"(\d+)\s*(?:عرض|عروض)")
+
+gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 
 @dataclass
@@ -94,6 +37,7 @@ class Project:
     min_budget: int | None = None
     bids_count: int = 0
     score: int = 0
+    llm_reason: str = ""
 
 
 def normalize_arabic(text: str) -> str:
@@ -139,22 +83,6 @@ def parse_bids_count(meta_text: str) -> int:
     return int(match.group(1)) if match else 0
 
 
-def score_text(text: str, bids_count: int) -> int:
-    normalized = normalize_arabic(text)
-    score = 0
-    for kw, weight in POSITIVE_KEYWORDS.items():
-        if kw in normalized:
-            score += weight
-    for kw, penalty in NEGATIVE_KEYWORDS.items():
-        if kw in normalized:
-            score += penalty
-    if bids_count <= 2:
-        score += 20
-    elif bids_count <= 5:
-        score += 10
-    return score
-
-
 async def fetch_project_list(page: Page) -> list[Project]:
     await page.goto(MOSTAQL_URL, wait_until="domcontentloaded", timeout=30000)
     await page.wait_for_selector("tr.project-row", timeout=25000)
@@ -175,15 +103,15 @@ async def fetch_project_list(page: Page) -> list[Project]:
         meta_text = row.get_text(" ", strip=True)
         bids_count = parse_bids_count(meta_text)
 
-        project = Project(
-            url=url,
-            title=title,
-            snippet=snippet,
-            meta_text=meta_text,
-            bids_count=bids_count,
-            score=score_text(f"{title} {snippet}", bids_count),
+        projects.append(
+            Project(
+                url=url,
+                title=title,
+                snippet=snippet,
+                meta_text=meta_text,
+                bids_count=bids_count,
+            )
         )
-        projects.append(project)
 
     print(f"Projects found: {len(projects)}")
     return projects
@@ -199,9 +127,19 @@ async def enrich_project_details(page: Page, project: Project) -> None:
     desc_el = soup.select_one("#project-brief-panel, .project-details, .text-wrapper-div")
     project.full_description = desc_el.get_text(" ", strip=True) if desc_el else project.snippet
 
-    meta_panel = soup.select_one("#project-meta-panel, .project-meta, aside")
-    meta_str = meta_panel.get_text(" ", strip=True) if meta_panel else soup.get_text(" ", strip=True)
-    amounts = [int(float(m.replace(",", ""))) for m in BUDGET_RE.findall(meta_str)]
+    budget_source = ""
+    budget_label = soup.find(string=re.compile(r"الميزانية"))
+    if budget_label and budget_label.parent:
+        budget_row = budget_label.parent.find_parent(["tr", "li", "div"])
+        if budget_row:
+            budget_source = budget_row.get_text(" ", strip=True)
+
+    if not budget_source:
+        meta_panel = soup.select_one("#project-meta-panel, .project-meta, aside")
+        budget_source = meta_panel.get_text(" ", strip=True) if meta_panel else soup.get_text(" ", strip=True)
+
+    raw_matches = BUDGET_RE.findall(budget_source)
+    amounts = [int(float((m[0] or m[1]).replace(",", ""))) for m in raw_matches if (m[0] or m[1])]
 
     if amounts:
         project.min_budget = min(amounts)
@@ -210,14 +148,38 @@ async def enrich_project_details(page: Page, project: Project) -> None:
         else:
             project.budget_text = f"${amounts[0]}"
 
-    project.score = score_text(f"{project.title} {project.full_description}", project.bids_count)
+
+async def score_with_llm(project: Project) -> tuple[int, str]:
+    prompt = f"""You are a freelance job screener for a backend software engineer.
+Evaluate this Arabic/English Mostaql job posting and return ONLY a JSON object with keys "score" (integer 0-100) and "reason" (one short sentence in English).
+
+Developer Profile:
+- Strong skills (score 75-100): C#/.NET, ASP.NET Core, Python, Django, FastAPI, Node.js/MERN, REST APIs, PostgreSQL, SQL Server, Redis, Docker, web scraping (Playwright/Selenium/BeautifulSoup), Python automation/bots, LLM/OpenAI API integrations, YOLO/OpenCV.
+- Acceptable if clear scope (score 60-74): General backend fixes, database design, data extraction to Excel/Sheets.
+- Reject (score 0-30): WordPress, Elementor, WooCommerce, Shopify, Salla, Zid, Flutter, native Android/iOS mobile apps, PHP/Laravel, pure graphic design, or training custom ML models from scratch.
+
+Job Title: {project.title}
+Budget: {project.budget_text}
+Bids: {project.bids_count}
+Description: {(project.full_description or project.snippet)[:1500]}
+"""
+    resp = await gemini_client.aio.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            temperature=0.1,
+        ),
+    )
+    data = json.loads(resp.text)
+    return int(data.get("score", 0)), str(data.get("reason", "no reason provided"))
 
 
 async def send_alert(page: Page, project: Project) -> None:
-    summary = (project.full_description or project.snippet)[:220]
     message = (
-        f"التقييم: {project.score} | الميزانية: {project.budget_text} | العروض: {project.bids_count}\n"
-        f"{summary}..."
+        f"التقييم: {project.score}/100 | الميزانية: {project.budget_text} | العروض: {project.bids_count}\n"
+        f"السبب: {project.llm_reason}\n"
+        f"{(project.full_description or project.snippet)[:180]}..."
     )
     payload = {
         "topic": NTFY_TOPIC,
@@ -256,10 +218,6 @@ async def main() -> None:
                 seen_list.append(build_seen_entry(project, "rejected", f"too_many_bids ({project.bids_count} > {MAX_BIDS})"))
                 continue
 
-            if project.score < 0:
-                seen_list.append(build_seen_entry(project, "rejected", f"blocked_keywords (score {project.score})"))
-                continue
-
             try:
                 await enrich_project_details(page, project)
             except Exception as exc:
@@ -271,12 +229,19 @@ async def main() -> None:
                 seen_list.append(build_seen_entry(project, "rejected", f"budget_too_low (${project.min_budget} < ${MIN_BUDGET})"))
                 continue
 
-            if project.score < MIN_SCORE_THRESHOLD:
-                seen_list.append(build_seen_entry(project, "rejected", f"score_too_low ({project.score} < {MIN_SCORE_THRESHOLD})"))
+            try:
+                project.score, project.llm_reason = await score_with_llm(project)
+            except Exception as exc:
+                print(f"LLM scoring failed for {project.url}: {exc}")
+                seen_list.append(build_seen_entry(project, "rejected", "llm_error"))
+                continue
+
+            if project.score < MIN_LLM_SCORE:
+                seen_list.append(build_seen_entry(project, "rejected", f"llm_rejected: {project.llm_reason}"))
                 continue
 
             await send_alert(page, project)
-            seen_list.append(build_seen_entry(project, "sent", "matched"))
+            seen_list.append(build_seen_entry(project, "sent", f"llm_matched: {project.llm_reason}"))
             await asyncio.sleep(1.5)
 
         await browser.close()
