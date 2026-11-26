@@ -223,5 +223,104 @@
     "score": 0,
     "bids": 55,
     "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295349-%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%88%D8%A8%D8%B1%D9%85%D8%AC%D8%A9-%D9%85%D9%86%D8%B5%D8%A9-%D8%B3%D8%AD%D8%A7%D8%A8%D9%8A%D8%A9-%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D8%A9-%D9%84%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D9%83%D8%A7%D8%AA-saas-erp",
+    "title": "تصميم وبرمجة منصة سحابية متكاملة لإدارة الشركات (SaaS ERP)",
+    "status": "rejected",
+    "reason": "too_many_bids (14 > 10)",
+    "score": 0,
+    "bids": 14,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295423-%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D9%85%D9%86%D8%B8%D9%88%D9%85%D8%A9-%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A%D8%A9-%D9%88%D8%AA%D8%B7%D8%A8%D9%8A%D9%82%D8%A7%D8%AA-%D9%85%D8%AA%D8%B1%D8%A7%D8%A8%D8%B7%D8%A9-%D9%84%D9%85%D8%AA%D8%AC%D8%B1-woocommerce-%D9%82%D8%A7%D8%A6%D9%85",
+    "title": "تطوير منظومة تجارة إلكترونية وتطبيقات مترابطة لمتجر WooCommerce قائم",
+    "status": "rejected",
+    "reason": "too_many_bids (21 > 10)",
+    "score": 0,
+    "bids": 21,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295365-%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D8%A5%D8%B6%D8%A7%D9%81%D8%A9-ai-%D9%84%D9%80-burp-suite-%D9%85%D8%B4%D8%A7%D8%A8%D9%87%D8%A9-%D9%84%D9%80-burp-at-%D9%84%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1-%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%D8%B1%D8%A7%D9%82-%D9%88%D9%85%D8%B1%D8%A7%D8%AC%D8%B9%D8%A9-%D8%A7%D9%84%D9%83%D9%88%D8%AF-%D8%A7%D9%84%D9%85%D8%B5%D8%AF%D8%B1%D9%8A",
+    "title": "تطوير إضافة AI لـ Burp Suite مشابهة لـ Burp AT لاختبار الاختراق ومراجعة الكود المصدري",
+    "status": "rejected",
+    "reason": "too_many_bids (15 > 10)",
+    "score": 0,
+    "bids": 15,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295416-%D8%A5%D9%86%D8%B4%D8%A7%D8%A1-%D9%85%D9%86%D8%B5%D8%A9-%D8%B5%D9%86%D8%AF%D9%88%D9%82-%D8%A7%D9%84%D8%AE%D9%8A%D8%B1-%D9%81%D9%8A-%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%A7%D9%86",
+    "title": "إنشاء منصة صندوق الخير في الحميان",
+    "status": "rejected",
+    "reason": "too_many_bids (48 > 10)",
+    "score": 0,
+    "bids": 48,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295407-%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D8%A7%D8%AF%D8%A7%D8%B1%D9%89-%D8%B4%D8%A7%D9%85%D9%84-%D8%A7%D9%84%D9%85%D9%88%D8%A7%D8%B1%D8%AF-%D8%A7%D9%84%D8%A8%D8%B4%D8%B1%D9%8A%D9%87",
+    "title": "تطوير برنامج  ادارى شامل الموارد البشريه",
+    "status": "rejected",
+    "reason": "too_many_bids (55 > 10)",
+    "score": 0,
+    "bids": 55,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295398-%D8%A3%D8%AD%D8%AA%D8%A7%D8%AC-%D8%A7%D8%B3%D8%AA%D8%AE%D8%B1%D8%A7%D8%AC-%D9%85%D9%81%D8%A7%D8%AA%D9%8A%D8%AD-api",
+    "title": "أحتاج استخراج مفاتيح api",
+    "status": "rejected",
+    "reason": "too_many_bids (19 > 10)",
+    "score": 0,
+    "bids": 19,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295402-%D9%85%D9%87%D9%86%D8%AF%D8%B3-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D9%85%D8%B7%D9%88%D8%B1-%D8%A3%D9%86%D8%B8%D9%85%D8%A9-radius-%D9%84%D8%B1%D8%A8%D8%B7-%D9%88%D8%AF%D9%85%D8%AC-mikrotik-%D9%88-chillispot-%D9%85%D8%B9-dma-radius-manager",
+    "title": "مهندس شبكات / مطور أنظمة RADIUS لربط ودمج MikroTik و ChilliSpot مع DMA Radius Manager",
+    "status": "rejected",
+    "reason": "llm_error",
+    "score": 0,
+    "bids": 5,
+    "budget": "$500"
+  },
+  {
+    "url": "https://mostaql.com/project/1295392-%D8%A5%D9%86%D8%B4%D8%A7%D8%A1-%D8%A8%D9%88%D8%B1%D8%AA%D9%81%D9%88%D9%84%D9%8A%D9%88-%D8%B4%D8%AE%D8%B5%D9%8A",
+    "title": "إنشاء بورتفوليو شخصي",
+    "status": "rejected",
+    "reason": "too_many_bids (85 > 10)",
+    "score": 0,
+    "bids": 85,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295380-%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA-%D8%AA%D9%82%D9%86%D9%8A%D8%A9-%D9%84%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D9%85%D9%86%D8%B5%D8%A9-container-security-digital-forensics-%D9%81%D9%8A-%D8%A8%D9%8A%D8%A6%D8%A9-on-premises",
+    "title": "استشارات تقنية لتطوير منصة Container Security & Digital Forensics في بيئة On-Premises",
+    "status": "rejected",
+    "reason": "llm_error",
+    "score": 0,
+    "bids": 5,
+    "budget": "$2500"
+  },
+  {
+    "url": "https://mostaql.com/project/1295357-%D8%AA%D8%B9%D8%AF%D9%8A%D9%84%D8%A7%D8%AA-%D8%A8%D8%B3%D9%8A%D8%B7%D8%A9-%D8%AF%D8%A7%D8%AE%D9%84-%D9%85%D9%88%D9%82%D8%B9%D9%8A-%D9%88%D8%AA%D8%AD%D8%B3%D9%8A%D9%86-%D8%A7%D9%84%D9%80-ai",
+    "title": "تعديلات بسيطة داخل موقعي وتحسين الـ AI",
+    "status": "rejected",
+    "reason": "too_many_bids (51 > 10)",
+    "score": 0,
+    "bids": 51,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295276-%D8%A5%D9%86%D8%B4%D8%A7%D8%A1-%D9%84%D8%B9%D8%A8%D8%A9-%D8%B1%D8%B9%D8%A8-3d",
+    "title": "إنشاء لعبة رعب 3D",
+    "status": "rejected",
+    "reason": "llm_error",
+    "score": 0,
+    "bids": 7,
+    "budget": "$2500"
   }
 ]
