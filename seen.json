@@ -385,5 +385,50 @@
     "score": 0,
     "bids": 43,
     "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295691-%D8%AA%D8%B9%D8%AF%D9%8A%D9%84-%D9%85%D9%88%D9%82%D8%B9-wix",
+    "title": "تعديل موقع wix",
+    "status": "rejected",
+    "reason": "too_many_bids (13 > 10)",
+    "score": 0,
+    "bids": 13,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295662-%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%88%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-landing-page-%D8%A7%D8%AD%D8%AA%D8%B1%D8%A7%D9%81%D9%8A%D8%A9-%D9%88%D9%85%D8%AA%D8%AC%D8%A7%D9%88%D8%A8%D8%A9-%D9%85%D8%B9-%D8%AC%D9%85%D9%8A%D8%B9-%D8%A7%D9%84%D8%A3%D8%AC%D9%87%D8%B2%D8%A9",
+    "title": "تصميم وتطوير Landing Page احترافية ومتجاوبة مع جميع الأجهزة",
+    "status": "rejected",
+    "reason": "too_many_bids (87 > 10)",
+    "score": 0,
+    "bids": 87,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295661-%D9%85%D8%B4%D8%B1%D9%88%D8%B9-%D9%86%D9%82%D9%84-%D9%85%D8%AA%D8%AC%D8%B1-%D8%A5%D9%84%D9%89-%D9%88%D9%88%D8%B1%D8%AF%D8%A8%D8%B1%D9%8A%D8%B3",
+    "title": "مشروع نقل متجر إلى ووردبريس",
+    "status": "rejected",
+    "reason": "too_many_bids (33 > 10)",
+    "score": 0,
+    "bids": 33,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295652-%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%85%D9%88%D9%82%D8%B9",
+    "title": "تصميم موقع",
+    "status": "rejected",
+    "reason": "too_many_bids (78 > 10)",
+    "score": 0,
+    "bids": 78,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295561-%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D9%85%D9%86%D8%B8%D9%88%D9%85%D8%A9-%D8%B1%D9%82%D9%85%D9%8A%D8%A9-%D9%85%D8%AA%D9%83%D8%A7%D9%85%D9%84%D8%A9-%D9%84%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%B4%D8%B1%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86-%D9%88%D8%A7%D9%84%D9%88%D8%B3%D8%A7%D8%B7%D8%A9-%D8%A7%D9%84%D8%AA%D8%A3%D9%85%D9%8A%D9%86%D9%8A%D8%A9-%D9%88%D8%A7%D9%84%D8%AD%D9%88%D9%83%D9%85%D8%A9-%D8%A7%D9%84%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A%D8%A9",
+    "title": "تطوير منظومة رقمية متكاملة لإدارة شركات التأمين والوساطة التأمينية والحوكمة الإلكترونية",
+    "status": "rejected",
+    "reason": "too_many_bids (52 > 10)",
+    "score": 0,
+    "bids": 52,
+    "budget": "غير محدد"
   }
 ]
