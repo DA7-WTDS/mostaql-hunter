@@ -430,5 +430,77 @@
     "score": 0,
     "bids": 52,
     "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295780-%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%84%D9%88%D8%AD%D8%A9-%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A7%D8%AA-%D8%AA%D9%81%D8%A7%D8%B9%D9%84%D9%8A%D8%A9-%D9%84%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D9%88%D8%AA%D8%AD%D9%84%D9%8A%D9%84-%D8%A7%D9%84%D9%85%D8%AE%D8%B2%D9%88%D9%86-inventory-management-dashboard-%D8%B9%D8%A8%D8%B1-%D8%A5%D9%83%D8%B3%D9%84",
+    "title": "تصميم لوحة معلومات تفاعلية لإدارة وتحليل المخزون (Inventory Management Dashboard) عبر إكسل",
+    "status": "rejected",
+    "reason": "too_many_bids (30 > 10)",
+    "score": 0,
+    "bids": 30,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295769-%D8%A5%D9%86%D8%B4%D8%A7%D8%A1-%D8%AA%D8%B7%D8%A8%D9%8A%D9%82-%D8%AA%D8%B9%D9%84%D9%8A%D9%85%D9%8A-%D8%A8%D8%B3%D9%8A%D8%B7-%D9%84%D9%84%D8%A3%D8%B7%D9%81%D8%A7%D9%84",
+    "title": "إنشاء تطبيق تعليمي بسيط للأطفال",
+    "status": "rejected",
+    "reason": "too_many_bids (34 > 10)",
+    "score": 0,
+    "bids": 34,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295761-%D8%B1%D9%81%D8%B9-%D8%AA%D8%B7%D8%A8%D9%8A%D9%82-%D8%B9%D9%84%D9%89-%D8%AC%D9%88%D8%AC%D9%84-%D8%A8%D9%84%D8%A7%D9%8A",
+    "title": "رفع تطبيق على جوجل بلاي",
+    "status": "rejected",
+    "reason": "too_many_bids (24 > 10)",
+    "score": 0,
+    "bids": 24,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295756-%D8%A8%D8%B1%D9%85%D8%AC%D8%A9-%D9%88%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D8%AA%D8%B7%D8%A8%D9%8A%D9%82-%D8%AC%D9%88%D8%A7%D9%84-%D8%A3%D8%AF%D8%A8%D9%8A-%D9%88%D8%AB%D9%82%D8%A7%D9%81%D9%8A-%D8%B0%D8%A7%D9%83%D8%B1%D8%A9-%D9%85%D8%AB%D9%82%D9%88%D8%A8%D8%A9-%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85-flutter-%D9%88-supabase",
+    "title": "برمجة وتطوير تطبيق جوال أدبي وثقافي (ذاكرة مثقوبة) باستخدام Flutter و Supabase",
+    "status": "rejected",
+    "reason": "too_many_bids (46 > 10)",
+    "score": 0,
+    "bids": 46,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295730-%D9%85%D8%B7%D9%84%D9%88%D8%A8-%D9%85%D8%B7%D9%88%D8%B1-%D9%84%D9%85%D9%88%D9%82%D8%B9-%D9%85%D8%AA%D8%AC%D8%B1-%D8%A7%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A-%D9%81%D9%8A-%D8%B2%D8%AF",
+    "title": "مطلوب مطور لموقع متجر الكتروني في زد",
+    "status": "rejected",
+    "reason": "too_many_bids (31 > 10)",
+    "score": 0,
+    "bids": 31,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295722-%D8%B9%D9%85%D9%84-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC-%D9%84%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B9%D9%82%D9%88%D8%AF",
+    "title": "عمل برنامج لإدارة العقود",
+    "status": "rejected",
+    "reason": "too_many_bids (86 > 10)",
+    "score": 0,
+    "bids": 86,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295713-%D8%A5%D9%86%D8%B4%D8%A7%D8%A1-%D9%85%D8%AA%D8%AC%D8%B1-%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A-%D8%A7%D8%AD%D8%AA%D8%B1%D8%A7%D9%81%D9%8A-%D9%84%D8%A8%D8%B1%D8%A7%D9%86%D8%AF-veil-%D9%84%D9%84%D8%B9%D8%B7%D9%88%D8%B1",
+    "title": "إنشاء متجر إلكتروني احترافي لبراند VEIL للعطور",
+    "status": "rejected",
+    "reason": "too_many_bids (56 > 10)",
+    "score": 0,
+    "bids": 56,
+    "budget": "غير محدد"
+  },
+  {
+    "url": "https://mostaql.com/project/1295710-%D8%AA%D8%B7%D9%88%D9%8A%D8%B1-%D9%88%D8%AA%D8%B9%D8%AF%D9%8A%D9%84-%D9%85%D8%B4%D8%B1%D9%88%D8%B9-%D9%84%D9%84%D9%85%D8%AA%D8%A7%D8%AC%D8%B1-%D8%A7%D9%88%D9%86%D9%84%D8%A7%D9%8A%D9%86",
+    "title": "تطوير وتعديل مشروع للمتاجر اونلاين",
+    "status": "rejected",
+    "reason": "too_many_bids (34 > 10)",
+    "score": 0,
+    "bids": 34,
+    "budget": "غير محدد"
   }
 ]
